@@ -1,0 +1,30 @@
+  
+Good!  You are  half-way there.  Now you  know about  how C  is translated  into
+GIMPLE.  Let's see how good you are at understanding the C to GIMPLE conversion.
+
+The following  is a CFG  dump of a somewhat  meaningful little program.  Can you
+predict the  output of  the program just  by looking at  the GIMPLE  dump? Well,
+maybe or  maybe not. But your  task is to  find the corresponding C  program for
+which gcc-4.7.2 generated this GIMPLE dump.
+
+
+---------------------------------------
+A-6 GIMPLE CFG DUMP (file A-6-cfg-dump)
+---------------------------------------
+#include <stdio.h>
+
+void main()
+{
+    int i, j;
+    for(i = 2; i <= 100; i++) {
+        for(j = 2; j < i; j++) {
+            if(i % j == 0)
+                break;
+        }
+        if(i == j) {
+            printf("%d \n", i);
+        }
+   }            
+}
+
+The output is a list of prime numbers up to 100.

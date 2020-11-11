@@ -1,0 +1,52 @@
+---------------------
+B-1 Function Inlining
+---------------------
+
+        In this program we  observe how the code of a function  is placed in the
+        position of  its call if  doing so does not  increase the code  size too
+        much.
+
+        Source file : B-1.c
+        Compilation : gcc-4.7.2 -c -O2 -fdump-tree-all B-1.c
+        View result : vi -O B-1.c.*.ssa B-1.c.*.einline 
+        Clear dumps : rm -f B-1.c.* B-1.o
+
+        Note: On some older versions of gcc the pass may be named "einline2".
+
+Program
+-------
+
+main ()                                 |main ()                                
+{                                       |{                                      
+  int x;                                |  int D.1598;                          
+  int D.1591;                           |  int a;                               
+                                        |  int x;                               
+<bb 2>:                                 |  int D.1591;                          
+  x_1 = 3;                              |                                       
+  x_2 = AddTwo (x_1);                   |<bb 2>:                                
+  D.1591_3 = x_2;                       |  x_1 = 3;                             
+  return D.1591_3;                      |  a_4 = x_1 + 2;                       
+                                        |  D.1598_5 = a_4;                      
+}                                       |  x_2 = D.1598_5;                      
+                                        |  D.1591_3 = x_2;                      
+                                        |  return D.1591_3;                     
+                                        |                                       
+                                        |}               
+
+Questions
+---------
+
+        1   The body  of AddTwo(x)  seems to  be inlined into  the call  of main
+            rendering the function useless (nobody else is calling it). Then why
+            is the definition of AddTwo(x) still there all the way till the last
+            pass (B-1.c.*.optimized)?
+
+	A   The function body exists because it may be called from another file.
+            The compiler cannot know about this before link time.
+
+        2   Is there any way to get rid of it?
+
+	A   If the function was declared with the "static" keyword (which, in C,
+            is something  like "private  to this file  only") then  the function
+            body will disappear if there is no caller within the file.
+
